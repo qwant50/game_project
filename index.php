@@ -26,9 +26,10 @@ error_reporting(0);  //production
         </div>
     </div>
     <p></p>
+
     <div class="row">
         <div class="col-xs-12">
-            <form action="index.php?calc=true" method="post">
+            <form action="index.php" method="post">
                 <div class="form-group">
                     <label for="time">Time to execute in seconds (default : 3000 sec.) :</label>
                     <input type="text" class="form-control" name="time" value="3000">
@@ -42,8 +43,15 @@ error_reporting(0);  //production
                 <button type="submit" class="btn btn-success">Verification</button>
             </form>
             <!-- end form -->
+        </div>
+    </div>
+
+    <div id="result" class="row">
+        <div class="col-xs-12">
             <?php
-            if (isset($_GET['calc']) && $_GET['calc'] == true) require_once 'wallConstructor.php';
+            if (isset($_POST['time']) && isset($_POST['sourceData'])) {
+                require_once 'wallConstructor.php';
+            }
             ?>
         </div>
     </div>
