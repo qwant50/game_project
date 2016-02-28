@@ -17,19 +17,19 @@ error_reporting(0);  //production
     <p></p>
 
     <div class="row">
-        <div class="col-xs-12">
-            <button class="btn btn-info" onclick="loadData(1)">Load data set 1</button>
-            <button class="btn btn-info" onclick="loadData(2)">Load data set 2</button>
-            <button class="btn btn-info" onclick="loadData(3)">Load data set 3</button>
-            <button class="btn btn-info" onclick="loadData(4)">Load data set 4</button>
-            <button class="btn btn-info" onclick="loadData(5)">Load data set 5</button>
+        <div id='loadData' class="col-xs-12">
+            <button class="btn btn-info">Load data set 1</button>
+            <button class="btn btn-info">Load data set 2</button>
+            <button class="btn btn-info">Load data set 3</button>
+            <button class="btn btn-info">Load data set 4</button>
+            <button class="btn btn-info">Load data set 5</button>
         </div>
     </div>
     <p></p>
 
     <div class="row">
         <div class="col-xs-12">
-            <form action="index.php" method="post">
+            <form action="javascript:void('interception auto-post')">
                 <div class="form-group">
                     <label for="time">Time to execute in seconds (default : 3000 sec.) :</label>
                     <input type="text" class="form-control" name="time" value="3000">
@@ -40,19 +40,15 @@ error_reporting(0);  //production
                     <textarea rows="15" class="form-control" name="sourceData"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-success">Verification</button>
+                <button id="sub" class="btn btn-success">Verification</button>
             </form>
             <!-- end form -->
         </div>
     </div>
 
-    <div id="result" class="row">
-        <div class="col-xs-12">
-            <?php
-            if (isset($_POST['time']) && isset($_POST['sourceData'])) {
-                require_once 'wallConstructor.php';
-            }
-            ?>
+    <div class="row">
+        <div id="result" class="col-xs-12">
+
         </div>
     </div>
 
