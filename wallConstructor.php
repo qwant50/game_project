@@ -34,31 +34,30 @@ function isPuttable($brickH, $brickW, $positionH, $positionW, &$matrix)
 
 function putBrick(&$bn, &$brickH, &$brickW, &$brickS)
 {
-    global $countElementaryBricks, $matrix, $matrixH, $matrixW;
+    global $countElementaryBricks, $matrix, $matrixH, $matrixW, $bricksMatrix;
+
     for ($h = 0; $h <= $matrixH - $brickH; $h++):   // cutting wall if brick is bigger
         for ($w = 0; $w <= $matrixW - $brickW; $w++):
-            if ($brickS <= $countElementaryBricks) {
-                if (isPuttable($brickH, $brickW, $h, $w, $matrix)) {  // $bn - brick number
-                    $backupMatrix = $matrix;
-                    for ($hh = 0; $hh < $brickH; $hh++)  // Putting brick by own number+2
-                    {
-                        for ($ww = 0; $ww < $brickW; $ww++) {
-                            $matrix[$h + $hh][$w + $ww] = $bn + 2;
-                        }
+            if (isPuttable($brickH, $brickW, $h, $w, $matrix)) {  // $bn - brick number
+                $backupMatrix = $matrix;
+                for ($hh = 0; $hh < $brickH; $hh++)  // Putting brick by own number+2
+                {
+                    for ($ww = 0; $ww < $brickW; $ww++) {
+                        $matrix[$h + $hh][$w + $ww] = $bn + 2;
                     }
-
-                    $bricksMatrix[$bn][0] = 0; // brick is used
-                    $countElementaryBricks -= $brickS;
-                    if ($countElementaryBricks == 0 || wallConstructor($bn + 1)) {
-                        return 1;
-                    }
-                    $bricksMatrix[$bn][0] = 1; // brick is free
-                    $countElementaryBricks += $brickS;
-                    $matrix = $backupMatrix;
                 }
-            };
+                $bricksMatrix[$bn][0] = 0; // brick is used
+                $countElementaryBricks -= $brickS;
+                if ($countElementaryBricks == 0 || wallConstructor($bn + 1)) {
+                    return 1;
+                }
+                $bricksMatrix[$bn][0] = 1; // brick is free
+                $countElementaryBricks += $brickS;
+                $matrix = $backupMatrix;
+            }
         endfor;
     endfor;
+
     return 0;
 }
 
@@ -68,22 +67,26 @@ function putBrick(&$bn, &$brickH, &$brickW, &$brickS)
  */
 function wallConstructor($bn)
 {
-    global $maxBricksNumber, $bricksMatrix;
+    global $maxBricksNumber, $bricksMatrix, $countElementaryBricks;
 
     while ($bn < $maxBricksNumber):
         if ($bricksMatrix[$bn][0] != 1) { //if brick is free goto next
             $bn++;
+        } elseif ($bricksMatrix[$bn][4] < $countElementaryBricks) {
+            return false;
         } else {
             $brickH = $bricksMatrix[$bn][1];
             $brickW = $bricksMatrix[$bn][2];
             $brickS = $brickH * $brickW;
-            if (putBrick($bn, $brickH, $brickW, $brickS) == 1) {
-                return true;
-            } elseif ($brickW != $brickH) {
-                if (putBrick($bn, $brickW, $brickH, $brickS) == 1) {
+            if ($brickS <= $countElementaryBricks) {
+                if (putBrick($bn, $brickH, $brickW, $brickS) == 1) {
                     return true;
-                };
-            }
+                } elseif ($brickW != $brickH) {
+                    if (putBrick($bn, $brickW, $brickH, $brickS) == 1) {
+                        return true;
+                    };
+                }
+            };
             $bn = $bricksMatrix[$bn][3];
         };
     endwhile;
@@ -126,6 +129,7 @@ if (isset($_POST['sourceData']) && isset($_POST['time'])) {
 
     $countElementaryBricks = 0;
     // building full bricks matrix
+
     $next = 0;
     foreach ($bricks as $brick):
         // symmetrical bricks
@@ -138,9 +142,16 @@ if (isset($_POST['sourceData']) && isset($_POST['time'])) {
             }
         }
     endforeach;
-    unset($bricks, $brick);
-
     $maxBricksNumber = count($bricksMatrix);
+    unset($bricks, $brick, $c);
+    $before = 0;
+    for ($c = $maxBricksNumber - 1; $c >= 0; $c--) {
+        if ($bricksMatrix[$c][1] * $bricksMatrix[$c][2] != 1) {
+            $bricksMatrix[$c][4] = $bricksMatrix[$c][1] * $bricksMatrix[$c][2] + $before;
+            $before = $bricksMatrix[$c][4];
+        }
+    }
+
 
     foreach ($matrix as $row)  // Calculating count elementary bricks w/o briks size 1x1
     {
