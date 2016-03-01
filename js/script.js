@@ -5,7 +5,7 @@
         $('textarea').load("data/dataSet" + number + ".data");
     });
 
-    $('#sub').click(function () {
+    $('#submit').click(function () {
         $("#result").html('Starting...');
         var data = $('form').serialize();
         $.ajax({
@@ -13,10 +13,10 @@
             url: "wallConstructor.php",
             data: data,
             dataType: "html",
-            success: function(response) {
+            success: function (response) {
                 $("#result").html(response);
             },
-            error: function(response) {
+            error: function (response) {
                 $("#result").html("?????? ??? ???????? ?????");
             }
         })

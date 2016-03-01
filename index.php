@@ -40,7 +40,7 @@ error_reporting(0);  //production
                     <textarea rows="15" class="form-control" name="sourceData"></textarea>
                 </div>
 
-                <button id="sub" class="btn btn-success">Verification</button>
+                <button id="submit" class="btn btn-success">Verification</button>
             </form>
             <!-- end form -->
         </div>

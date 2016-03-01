@@ -49,8 +49,8 @@ function putBrick(&$bn, &$brickH, &$brickW, &$brickS)
 
                     $bricksMatrix[$bn][0] = 0; // brick is used
                     $countElementaryBricks -= $brickS;
-                    if ($countElementaryBricks == 0  || wallConstructor($bn + 1)) {
-                        return true;
+                    if ($countElementaryBricks == 0 || wallConstructor($bn + 1)) {
+                        return 1;
                     }
                     $bricksMatrix[$bn][0] = 1; // brick is free
                     $countElementaryBricks += $brickS;
@@ -59,36 +59,34 @@ function putBrick(&$bn, &$brickH, &$brickW, &$brickS)
             };
         endfor;
     endfor;
+    return 0;
 }
 
 /**
- * @param $firstBrick
+ * @param $bn
  * @return bool
  */
-function wallConstructor($firstBrick)
+function wallConstructor($bn)
 {
     global $maxBricksNumber, $bricksMatrix;
-    $prev = true;
-    for ($bn = $firstBrick; $bn < $maxBricksNumber; $bn++):
-        if ($bricksMatrix[$bn][0] == 1) { //if brick didnt use
-            if ($prev || ($bricksMatrix[$bn - 1][1] != $bricksMatrix[$bn][1]) || ($bricksMatrix[$bn - 1][2] != $bricksMatrix[$bn][2])) {
 
-                $brickH = $bricksMatrix[$bn][1];
-                $brickW = $bricksMatrix[$bn][2];
-                $brickS = $brickH * $brickW;
-                if (putBrick($bn, $brickH, $brickW, $brickS)) {
+    while ($bn < $maxBricksNumber):
+        if ($bricksMatrix[$bn][0] != 1) { //if brick is free goto next
+            $bn++;
+        } else {
+            $brickH = $bricksMatrix[$bn][1];
+            $brickW = $bricksMatrix[$bn][2];
+            $brickS = $brickH * $brickW;
+            if (putBrick($bn, $brickH, $brickW, $brickS) == 1) {
+                return true;
+            } elseif ($brickW != $brickH) {
+                if (putBrick($bn, $brickW, $brickH, $brickS) == 1) {
                     return true;
                 };
-
-                if ($brickW != $brickH) {
-                    if (putBrick($bn, $brickW, $brickH, $brickS)) {
-                        return true;
-                    };
-                }
-                $prev = false;
             }
-        }
-    endfor;
+            $bn = $bricksMatrix[$bn][3];
+        };
+    endwhile;
     return false;
 }
 
@@ -128,13 +126,13 @@ if (isset($_POST['sourceData']) && isset($_POST['time'])) {
 
     $countElementaryBricks = 0;
     // building full bricks matrix
-   // $next = 0;
+    $next = 0;
     foreach ($bricks as $brick):
         // symmetrical bricks
-       // $next += $brick[2];
+        $next += $brick[2];
         for ($c = 0; $c < $brick[2]; $c++) {
             if ($brick[0] * $brick[1] != 1) {
-                $bricksMatrix[] = [1, $brick[0], $brick[1]];
+                $bricksMatrix[] = [1, $brick[0], $brick[1], $next];
             } else {
                 $countElementaryBricks--;  // Calculating count bricks with size 1x1
             }
