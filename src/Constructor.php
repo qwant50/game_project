@@ -1,5 +1,7 @@
 <?php
 
+namespace Qwant;
+
 /**
  * Class Constructor
  */
