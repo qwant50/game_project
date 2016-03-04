@@ -116,19 +116,18 @@ class Constructor
 
     public function putBrick(&$bn, &$brickH, &$brickW, &$brickS)
     {
-        $matrix = $this->matrix;
         $matrixH = $this->matrixH;
         $matrixW = $this->matrixW;
         $bricksMatrix = $this->bricksMatrix;
 
         for ($h = 0; $h <= $matrixH - $brickH; $h++):   // cutting wall if brick is bigger
             for ($w = 0; $w <= $matrixW - $brickW; $w++):
-                if ($this->isPuttable($brickH, $brickW, $h, $w, $matrix)) {  // $bn - brick number
-                    $backupMatrix = $matrix;
+                if ($this->isPuttable($brickH, $brickW, $h, $w, $this->matrix)) {  // $bn - brick number
+                    $backupMatrix = $this->matrix;
                     for ($hh = 0; $hh < $brickH; $hh++)  // Putting brick by own number+2
                     {
                         for ($ww = 0; $ww < $brickW; $ww++) {
-                            $matrix[$h + $hh][$w + $ww] = $bn + 2;
+                            $this->matrix[$h + $hh][$w + $ww] = $bn + 2;
                         }
                     }
                     $bricksMatrix[$bn][0] = 0; // brick is used
@@ -138,7 +137,7 @@ class Constructor
                     }
                     $bricksMatrix[$bn][0] = 1; // brick is free
                     $this->countElementaryBricks += $brickS;
-                    $matrix = $backupMatrix;
+                    $this->matrix = $backupMatrix;
                 }
             endfor;
         endfor;
