@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Qwant
- * Date: 04-Jan-16
- * Time: 21:36
- */
 
 register_shutdown_function('time_shutdown');
 

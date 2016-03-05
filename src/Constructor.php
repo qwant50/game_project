@@ -15,7 +15,6 @@ class Constructor
     private $matrixH;
     private $matrixW;
 
-
     public function __construct($time, $sourceData)
     {
         $time = (int)$_POST['time'];
@@ -118,9 +117,9 @@ class Constructor
 
     public function putBrick(&$bn, &$brickH, &$brickW, &$brickS)
     {
-        $matrixH = $this->matrixH;
-        $matrixW = $this->matrixW;
-        $bricksMatrix = $this->bricksMatrix;
+        $matrixH = &$this->matrixH;
+        $matrixW = &$this->matrixW;
+        $bricksMatrix = &$this->bricksMatrix;
 
         for ($h = 0; $h <= $matrixH - $brickH; $h++):   // cutting wall if brick is bigger
             for ($w = 0; $w <= $matrixW - $brickW; $w++):
